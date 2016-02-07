@@ -35,5 +35,6 @@ void MysqlPreparedStatement_setBlob(T P, int parameterIndex, const void *x, int 
 void MysqlPreparedStatement_execute(T P);
 ResultSet_T MysqlPreparedStatement_executeQuery(T P);
 long long MysqlPreparedStatement_rowsChanged(T P);
+void MysqlPreparedStatement_setFetchSize(T P, int prefetch_rows);
 #undef T
 #endif

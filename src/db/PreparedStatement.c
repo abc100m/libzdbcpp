@@ -45,6 +45,7 @@
 struct PreparedStatement_S {
         Pop_T op;
         int parameterCount;
+        int fetchSize;
         ResultSet_T resultSet;
         PreparedStatementDelegate_T D;
 };
@@ -161,4 +162,17 @@ long long PreparedStatement_rowsChanged(T P) {
 int PreparedStatement_getParameterCount(T P) {
         assert(P);
         return P->parameterCount;
+}
+
+void PreparedStatement_setFetchSize(T P, int prefetch_rows)
+{
+        assert(P);
+        P->fetchSize = prefetch_rows;
+        P->op->setFetchSize(P->D, prefetch_rows);
+}
+
+int PreparedStatement_getFetchSize(T P)
+{
+        assert(P);
+        return P->fetchSize;
 }

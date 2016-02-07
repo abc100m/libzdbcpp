@@ -28,6 +28,7 @@ T MysqlConnection_new(URL_T url, char **error);
 void MysqlConnection_free(T *C);
 void MysqlConnection_setQueryTimeout(T C, int ms);
 void MysqlConnection_setMaxRows(T C, int max);
+void MysqlConnection_setDefaultRowPrefetch(T C, int prefetch_rows);
 int MysqlConnection_ping(T C);
 int MysqlConnection_beginTransaction(T C);
 int MysqlConnection_commit(T C);

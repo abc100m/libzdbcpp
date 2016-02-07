@@ -84,6 +84,7 @@ struct Connection_S {
 	int maxRows;
 	int timeout;
 	int isAvailable;
+    int defaultPrefetchRows;
         Vector_T prepared;
 	int isInTransaction;
         time_t lastAccessedTime;
@@ -214,6 +215,21 @@ void Connection_setMaxRows(T C, int max) {
 int Connection_getMaxRows(T C) {
 	assert(C);
 	return C->maxRows;
+}
+
+
+void Connection_setDefaultRowPrefetch(T C, int prefetch_rows)
+{
+        assert(C);
+        C->defaultPrefetchRows = prefetch_rows;
+        C->op->setDefaultRowPrefetch(C->D, prefetch_rows);
+}
+
+
+int Connection_getDefaultRowPrefetch(T C)
+{
+        assert(C);
+        return C->defaultPrefetchRows;
 }
 
 

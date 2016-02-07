@@ -506,6 +506,10 @@ struct tm ResultSet_getDateTime(T R, int columnIndex);
  */
 struct tm ResultSet_getDateTimeByName(T R, const char *columnName);
 
+//set prefetch size, just like JDBC
+void ResultSet_setFetchSize(T R, int prefetch_rows);
+int ResultSet_getFetchSize(T R);
+
 //@}
 
 #undef T

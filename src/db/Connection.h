@@ -168,6 +168,9 @@ void Connection_setMaxRows(T C, int max);
  */
 int Connection_getMaxRows(T C);
 
+//default prefetch rows, name like JDBC
+void Connection_setDefaultRowPrefetch(T C, int prefetch_rows);
+int  Connection_getDefaultRowPrefetch(T C);
 
 /**
  * Returns this Connection URL

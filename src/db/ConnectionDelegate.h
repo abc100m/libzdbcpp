@@ -44,6 +44,7 @@ typedef struct Cop_T {
 	void (*free)(T *C);
 	void (*setQueryTimeout)(T C, int ms);
         void (*setMaxRows)(T C, int max);
+        void (*setDefaultRowPrefetch)(T C, int prefetch_rows);
         int (*ping)(T C);
         int (*beginTransaction)(T C);
         int (*commit)(T C);

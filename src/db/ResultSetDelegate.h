@@ -49,6 +49,7 @@ typedef struct Rop_T {
         const void *(*getBlob)(T R, int columnIndex, int *size);
         time_t (*getTimestamp)(T R, int columnIndex);
         struct tm *(*getDateTime)(T R, int columnIndex, struct tm *tm);
+        void (*setFetchSize)(T R, int prefetch_rows);
 } *Rop_T;
 
 /**

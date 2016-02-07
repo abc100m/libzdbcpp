@@ -66,7 +66,8 @@ const struct Pop_T oraclepops = {
         .setBlob        = OraclePreparedStatement_setBlob,
         .execute        = OraclePreparedStatement_execute,
         .executeQuery   = OraclePreparedStatement_executeQuery,
-        .rowsChanged    = OraclePreparedStatement_rowsChanged
+        .rowsChanged    = OraclePreparedStatement_rowsChanged,
+        .setFetchSize   = OraclePreparedStatement_setFetchSize
 };
 typedef struct param_t {
         union {
@@ -83,6 +84,7 @@ typedef struct param_t {
 #define T PreparedStatementDelegate_T
 struct T {
         int         maxRows;
+		int         fetchSize;
         int         timeout;
         int         countdown;
         ub4         paramCount;
@@ -274,7 +276,7 @@ ResultSet_T OraclePreparedStatement_executeQuery(T P) {
         P->lastError = OCIStmtExecute(P->svc, P->stmt, P->err, 0, 0, NULL, NULL, OCI_DEFAULT);
         P->running = false;
         if (P->lastError == OCI_SUCCESS || P->lastError == OCI_SUCCESS_WITH_INFO)
-                return ResultSet_new(OracleResultSet_new(P->stmt, P->env, P->usr, P->err, P->svc, false, P->maxRows), (Rop_T)&oraclerops);
+                return ResultSet_new(OracleResultSet_new(P->stmt, P->env, P->usr, P->err, P->svc, false, P->maxRows, P->fetchSize), (Rop_T)&oraclerops);
         THROW(SQLException, "%s", OraclePreparedStatement_getLastError(P->lastError, P->err));
         return NULL;
 }
@@ -347,6 +349,12 @@ const char *OraclePreparedStatement_getLastError(int err, OCIError *errhp) {
                         break;
         }
         return erb;
+}
+
+
+void OraclePreparedStatement_setFetchSize(T P, int prefetch_rows) {
+    assert(P);
+    P->fetchSize = prefetch_rows;
 }
 
 #ifdef PACKAGE_PROTECTED

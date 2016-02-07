@@ -59,6 +59,7 @@ const struct Cop_T mysqlcops = {
         .free 		 	= MysqlConnection_free,
         .setQueryTimeout 	= MysqlConnection_setQueryTimeout,
         .setMaxRows 	 	= MysqlConnection_setMaxRows,
+        .setDefaultRowPrefetch = MysqlConnection_setDefaultRowPrefetch,
         .ping		 	= MysqlConnection_ping,
         .beginTransaction       = MysqlConnection_beginTransaction,
         .commit			= MysqlConnection_commit,
@@ -76,6 +77,7 @@ struct T {
         URL_T url;
 	MYSQL *db;
 	int maxRows;
+    int defaultPrefetchRows;
 	int timeout;
 	int lastError;
         StringBuffer_T sb;
@@ -218,6 +220,13 @@ void MysqlConnection_setMaxRows(T C, int max) {
 }
 
 
+void MysqlConnection_setDefaultRowPrefetch(T C, int prefetch_rows)
+{
+        assert(C);
+        C->defaultPrefetchRows = prefetch_rows;
+}
+
+
 int MysqlConnection_ping(T C) {
         assert(C);
         return (mysql_ping(C->db) == 0);
@@ -285,7 +294,7 @@ ResultSet_T MysqlConnection_executeQuery(T C, const char *sql, va_list ap) {
                         mysql_stmt_close(stmt);
                 }
                 else
-                        return ResultSet_new(MysqlResultSet_new(stmt, C->maxRows, false), (Rop_T)&mysqlrops);
+                        return ResultSet_new(MysqlResultSet_new(stmt, C->maxRows, false, C->defaultPrefetchRows), (Rop_T)&mysqlrops);
         }
         return NULL;
 }

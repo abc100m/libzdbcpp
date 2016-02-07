@@ -48,6 +48,7 @@ typedef struct Pop_T {
         void (*execute)(T P);
         ResultSet_T (*executeQuery)(T P);
         long long (*rowsChanged)(T P);
+        void (*setFetchSize)(T P, int prefetch_rows);
 } *Pop_T;
 
 /**

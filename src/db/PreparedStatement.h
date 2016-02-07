@@ -284,5 +284,9 @@ int PreparedStatement_getParameterCount(T P);
 
 //@}
 
+//set prefetch size, just like JDBC
+void PreparedStatement_setFetchSize(T P, int prefetch_rows);
+int PreparedStatement_getFetchSize(T P);
+
 #undef T
 #endif

@@ -56,7 +56,8 @@ const struct Rop_T mysqlrops = {
         .next           = MysqlResultSet_next,
         .isnull         = MysqlResultSet_isnull,
         .getString      = MysqlResultSet_getString,
-        .getBlob        = MysqlResultSet_getBlob
+        .getBlob        = MysqlResultSet_getBlob,
+        .setFetchSize   = MysqlResultSet_setFetchSize
         // getTimestamp and getDateTime is handled in ResultSet
 };
 
@@ -106,7 +107,7 @@ static inline void _ensureCapacity(T R, int i) {
 #pragma GCC visibility push(hidden)
 #endif
 
-T MysqlResultSet_new(void *stmt, int maxRows, int keep) {
+T MysqlResultSet_new(void *stmt, int maxRows, int keep, int fetchSize) {
 	T R;
 	assert(stmt);
 	NEW(R);
@@ -133,11 +134,11 @@ T MysqlResultSet_new(void *stmt, int maxRows, int keep) {
                         DEBUG("Error: bind - %s\n", mysql_stmt_error(stmt));
                         R->stop = true;
                 }
-                // Store resultset client side, speeds up processing with > 10x at the cost of increased memory usage
-                if ((R->lastError = mysql_stmt_store_result(R->stmt))) {
-                        DEBUG("Warning: store result - %s\n", mysql_stmt_error(stmt));
-                }
         }
+        if (!R->stop) {
+            MysqlResultSet_setFetchSize(R, fetchSize);
+        }
+        
 	return R;
 }
 
@@ -234,6 +235,12 @@ const void *MysqlResultSet_getBlob(T R, int columnIndex, int *size) {
         return R->columns[i].buffer;
 }
 
+void MysqlResultSet_setFetchSize(T R, int prefetch_rows) {
+        assert(R);
+        if (prefetch_rows > 0) {
+                mysql_stmt_attr_set(R->stmt, STMT_ATTR_PREFETCH_ROWS, (void*)&prefetch_rows);
+        }
+}
 
 #ifdef PACKAGE_PROTECTED
 #pragma GCC visibility pop

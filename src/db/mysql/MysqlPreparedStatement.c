@@ -58,7 +58,8 @@ const struct Pop_T mysqlpops = {
         .setBlob        = MysqlPreparedStatement_setBlob,
         .execute        = MysqlPreparedStatement_execute,
         .executeQuery   = MysqlPreparedStatement_executeQuery,
-        .rowsChanged    = MysqlPreparedStatement_rowsChanged
+        .rowsChanged    = MysqlPreparedStatement_rowsChanged,
+        .setFetchSize   = MysqlPreparedStatement_setFetchSize
 };
 
 typedef struct param_t {
@@ -74,6 +75,7 @@ typedef struct param_t {
 #define T PreparedStatementDelegate_T
 struct T {
         int maxRows;
+        int fetchSize;
         int lastError;
         param_t params;
         MYSQL_STMT *stmt;
@@ -233,7 +235,7 @@ ResultSet_T MysqlPreparedStatement_executeQuery(T P) {
         if ((P->lastError = mysql_stmt_execute(P->stmt)))
                 THROW(SQLException, "%s", mysql_stmt_error(P->stmt));
         if (P->lastError == MYSQL_OK)
-                return ResultSet_new(MysqlResultSet_new(P->stmt, P->maxRows, true), (Rop_T)&mysqlrops);
+                return ResultSet_new(MysqlResultSet_new(P->stmt, P->maxRows, true, P->fetchSize), (Rop_T)&mysqlrops);
         THROW(SQLException, "%s", mysql_stmt_error(P->stmt));
         return NULL;
 }
@@ -242,6 +244,11 @@ ResultSet_T MysqlPreparedStatement_executeQuery(T P) {
 long long MysqlPreparedStatement_rowsChanged(T P) {
         assert(P);
         return (long long)mysql_stmt_affected_rows(P->stmt);
+}
+
+void MysqlPreparedStatement_setFetchSize(T P, int prefetch_rows) {
+        assert(P);
+        P->fetchSize = prefetch_rows;
 }
 
 #ifdef PACKAGE_PROTECTED

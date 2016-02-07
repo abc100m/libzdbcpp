@@ -29,6 +29,7 @@ T    OracleConnection_new(URL_T url, char **error);
 void OracleConnection_free(T *C);
 void OracleConnection_setQueryTimeout(T C, int ms);
 void OracleConnection_setMaxRows(T C, int max);
+void OracleConnection_setDefaultRowPrefetch(T C, int prefetch_rows);
 int  OracleConnection_ping(T C);
 int  OracleConnection_beginTransaction(T C);
 int  OracleConnection_commit(T C);

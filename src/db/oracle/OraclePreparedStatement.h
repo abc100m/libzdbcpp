@@ -38,5 +38,6 @@ void OraclePreparedStatement_execute(T P);
 ResultSet_T OraclePreparedStatement_executeQuery(T P);
 long long OraclePreparedStatement_rowsChanged(T P);
 const char *OraclePreparedStatement_getLastError(int err, OCIError *errhp);
+void OraclePreparedStatement_setFetchSize(T P, int prefetch_rows);
 #undef T
 #endif

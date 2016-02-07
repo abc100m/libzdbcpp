@@ -59,6 +59,7 @@ const struct Cop_T oraclesqlcops = {
         .free 		 	= OracleConnection_free,
         .setQueryTimeout 	= OracleConnection_setQueryTimeout,
         .setMaxRows 	 	= OracleConnection_setMaxRows,
+        .setDefaultRowPrefetch = OracleConnection_setDefaultRowPrefetch,
         .ping		 	= OracleConnection_ping,
         .beginTransaction       = OracleConnection_beginTransaction,
         .commit			= OracleConnection_commit,
@@ -86,6 +87,7 @@ struct T {
         char           erb[ERB_SIZE];
         int            maxRows;
         int            timeout;
+		int            defaultPrefetchRows;
         int            countdown;
         sword          lastError;
         ub4            rowsChanged;
@@ -217,6 +219,13 @@ void OracleConnection_setQueryTimeout(T C, int ms) {
 void OracleConnection_setMaxRows(T C, int max) {
         assert(C);
         C->maxRows = max;
+}
+
+
+void OracleConnection_setDefaultRowPrefetch(T C, int prefetch_rows)
+{
+        assert(C);
+        C->defaultPrefetchRows = prefetch_rows;
 }
 
 
@@ -363,7 +372,7 @@ ResultSet_T OracleConnection_executeQuery(T C, const char *sql, va_list ap) {
         C->lastError = OCIAttrGet(stmtp, OCI_HTYPE_STMT, &C->rowsChanged, 0, OCI_ATTR_ROW_COUNT, C->err);
         if (C->lastError != OCI_SUCCESS && C->lastError != OCI_SUCCESS_WITH_INFO)
                 DEBUG("OracleConnection_execute: Error in OCIAttrGet %d (%s)\n", C->lastError, OracleConnection_getLastError(C));
-        return ResultSet_new(OracleResultSet_new(stmtp, C->env, C->usr, C->err, C->svc, true, C->maxRows), (Rop_T)&oraclerops);
+        return ResultSet_new(OracleResultSet_new(stmtp, C->env, C->usr, C->err, C->svc, true, C->maxRows, C->defaultPrefetchRows), (Rop_T)&oraclerops);
 }
 
 

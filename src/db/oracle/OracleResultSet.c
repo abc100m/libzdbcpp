@@ -60,7 +60,8 @@ const struct Rop_T oraclerops = {
         .next           = OracleResultSet_next,
         .isnull         = OracleResultSet_isnull,
         .getString      = OracleResultSet_getString,
-        .getBlob        = OracleResultSet_getBlob
+        .getBlob        = OracleResultSet_getBlob,
+        .setFetchSize   = OracleResultSet_setFetchSize
         // getTimestamp and getDateTime is handled in ResultSet
 };
 typedef struct column_t {
@@ -214,7 +215,7 @@ static int _toString(T R, int i)
 #pragma GCC visibility push(hidden)
 #endif
 
-T OracleResultSet_new(OCIStmt *stmt, OCIEnv *env, OCISession* usr, OCIError *err, OCISvcCtx *svc, int need_free, int max_row) {
+T OracleResultSet_new(OCIStmt *stmt, OCIEnv *env, OCISession* usr, OCIError *err, OCISvcCtx *svc, int need_free, int max_row, int fetchSize) {
         T R;
         assert(stmt);
         assert(env);
@@ -242,6 +243,10 @@ T OracleResultSet_new(OCIStmt *stmt, OCIEnv *env, OCISession* usr, OCIError *err
         }
         if ((max_row != 0) && ((R->maxRow > max_row) ||(R->maxRow == 0))) 
                 R->maxRow = max_row;
+        if (R->row != -1) {
+                OracleResultSet_setFetchSize(R, fetchSize);
+        }
+        
         return R;
 }
 
@@ -373,6 +378,15 @@ const void *OracleResultSet_getBlob(T R, int columnIndex, int *size) {
         *size = R->columns[i].length = (int)total_bytes;
         return (const void *)R->columns[i].buffer;
 }
+
+
+void OracleResultSet_setFetchSize(T R, int prefetch_rows) {
+    assert(R);
+    if (prefetch_rows > 0) {
+        R->lastError = OCIAttrSet(R->stmt, OCI_HTYPE_STMT, (void*)&prefetch_rows, (ub4)sizeof(ub4), OCI_ATTR_PREFETCH_ROWS, R->err);
+    }
+}
+
 
 #ifdef PACKAGE_PROTECTED
 #pragma GCC visibility pop

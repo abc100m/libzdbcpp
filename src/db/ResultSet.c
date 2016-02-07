@@ -44,6 +44,7 @@
 #define T ResultSet_T
 struct ResultSet_S {
         Rop_T op;
+        int fetchSize;
         ResultSetDelegate_T D;
 };
 
@@ -236,3 +237,15 @@ struct tm ResultSet_getDateTimeByName(T R, const char *columnName) {
         return ResultSet_getDateTime(R, _getIndex(R, columnName));
 }
 
+void ResultSet_setFetchSize(T R, int prefetch_rows)
+{
+        assert(R);
+        R->fetchSize = prefetch_rows;
+        R->op->setFetchSize(R->D, prefetch_rows);
+}
+
+int ResultSet_getFetchSize(T R)
+{
+        assert(R);
+        return R->fetchSize;
+}
