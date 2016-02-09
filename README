@@ -26,6 +26,7 @@
  -------------
  
  1. fetch a query
+ ```cpp
  ConnectionPool pool("mysql://192.168.11.100:3306/test?user=root&password=dba");
  Connection con = pool.getConnection();
  //here, use c++ 11 variadic templates feature to bind parameter 
@@ -37,11 +38,12 @@
     const char *blob = (char*)rset.getBlob(4, &imagesize);
     printf("\t%-5d%-16s%-10.2f%-16.38s\n", id, name ? name : "null", percent, imagesize ? blob : "");
  }
+ ```
  
  2. insert data
     char *data[]= {"Fry", "Leela", "Bender", "Farnsworth",
             "Zoidberg", "Amy", "Hermes", "Nibbler", "Cubert",
-            "Zapp", "Joey Mousepad", "ß¡¶≤?", 0}; 
+            "Zapp", "Joey Mousepad", "¬ß√Å¬¶¬≤?", 0}; 
     
     ConnectionPool pool("mysql://192.168.11.100:3306/test?user=root&password=dba");
     Connection con = pool.getConnection();
