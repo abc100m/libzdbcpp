@@ -378,7 +378,6 @@ public:
 
     Connection& operator=(Connection&& r)
     {
-        printf("here we go...");
         if (&r != this) {
             close();
             t_   = r.t_;
