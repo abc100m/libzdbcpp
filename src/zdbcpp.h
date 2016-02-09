@@ -399,21 +399,20 @@ protected:  // for ConnectionPool
 
 public:
     //void setAvailable(int isAvailable) {
-    //    except_warpper( Connection_setAvailable(t_, isAvailable) );
+    //    except_wrapper( Connection_setAvailable(t_, isAvailable) );
     //}
 
     //int isAvailable() {
-    //    except_warpper( return Connection_isAvailable(t_) );
+    //    except_wrapper( return Connection_isAvailable(t_) );
     //}
     
     //time_t getLastAccessedTime() {
-    //    except_warpper( return Connection_getLastAccessedTime(t_) );
+    //    except_wrapper( return Connection_getLastAccessedTime(t_) );
     //}
 
-    //??? we need this function ???
-    //int isInTransaction() {
-    //    except_warpper( return Connection_isInTransaction(t_) );
-    //}
+    int isInTransaction() {
+        except_wrapper(return Connection_isInTransaction(t_));
+    }
 
     void setQueryTimeout(int ms) {
         except_wrapper( Connection_setQueryTimeout(t_, ms) );

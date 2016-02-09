@@ -112,6 +112,9 @@ int Connection_isAvailable(T C);
 time_t Connection_getLastAccessedTime(T C);
 
 
+//>> End Protected methods
+
+
 /**
  * Return true if this Connection is in a transaction that has not
  * been committed.
@@ -119,9 +122,6 @@ time_t Connection_getLastAccessedTime(T C);
  * @return true if this Connection is in a transaction otherwise false
  */
 int Connection_isInTransaction(T C);
-
-
-//>> End Protected methods
 
 /** @name Properties */
 //@{
