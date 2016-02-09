@@ -16,22 +16,25 @@
  
  
 ###how to use libzdbcpp?
- after build libzdb, copy zdbcpp.h to the install dir.
+ after build libzdb, copy zdbcpp.h to the installed dir.
  ```cpp
  #include <zdbcpp.h>
  using namespace zdbcpp;
  ```
  
 ###demo code
--------------
  
 -  fetch a query
 ```cpp
  ConnectionPool pool("mysql://192.168.11.100:3306/test?user=root&password=dba");
  Connection con = pool.getConnection();
+ //we can set default prefetch to Connection
+ //con.setDefaultRowPrefetch(100);
  
  //here, use c++ 11 variadic templates feature to bind parameter 
  ResultSet rset = con.executeQuery("select id, name, percent, image from zild_t where id < ? order by id;", 100);
+ //row prefetch
+ rset.setFetchSize(100);
  
  while (rset.next()) {
 		int id = rset.getIntByName("id");
@@ -91,6 +94,7 @@
         printf(e.what());
     }
 ```
+
 
  for more document, please visit: 
  http://www.tildeslash.com/libzdb/#api
