@@ -1,7 +1,6 @@
-                            Libzdbcpp
-                                       
- Introduction libzdb
- ------------
+#                            Libzdbcpp
+
+###Introduction libzdb
 
  Libzdb is a database library with thread-safe connection pooling. The
  library can connect transparently to multiple database systems. It has
@@ -11,36 +10,40 @@
     https://bitbucket.org/tildeslash/libzdb
 
 
- Introduction libzdbcpp
- ------------
+###Introduction libzdbcpp
+
  Libzdbcpp is c++ 11 wrapper class for libzdb.
  
  
- how to use?
- ------------
- after build libzdb, copy zdbcpp.h to the install dir. then:
+###how to use libzdbcpp?
+ after build libzdb, copy zdbcpp.h to the install dir.
+ ```cpp
  #include <zdbcpp.h>
  using namespace zdbcpp;
+ ```
  
- demo code
- -------------
+###demo code
+-------------
  
- 1. fetch a query
+-  fetch a query
 ```cpp
  ConnectionPool pool("mysql://192.168.11.100:3306/test?user=root&password=dba");
  Connection con = pool.getConnection();
+ 
  //here, use c++ 11 variadic templates feature to bind parameter 
  ResultSet rset = con.executeQuery("select id, name, percent, image from zild_t where id < ? order by id;", 100);
+ 
  while (rset.next()) {
-    int id = rset.getIntByName("id");
-    const char *name = rset.getString(2);
-    double percent = rset.getDoubleByName("percent");
-    const char *blob = (char*)rset.getBlob(4, &imagesize);
-    printf("\t%-5d%-16s%-10.2f%-16.38s\n", id, name ? name : "null", percent, imagesize ? blob : "");
+		int id = rset.getIntByName("id");
+		const char *name = rset.getString(2);
+		double percent = rset.getDoubleByName("percent");
+		const char *blob = (char*)rset.getBlob(4, &imagesize);
+		printf("\t%-5d%-16s%-10.2f%-16.38s\n", id, name ? name : "null", percent, imagesize ? blob : "");
  }
 ```
  
- 2. insert data
+- insert data
+```cpp
     char *data[]= {"Fry", "Leela", "Bender", "Farnsworth",
             "Zoidberg", "Amy", "Hermes", "Nibbler", "Cubert",
             "Zapp", "Joey Mousepad", "§Á¦²?", 0}; 
@@ -51,10 +54,13 @@
     /* Insert values into database and assume that auto increment of id works */
     long long affected_rows = 0;
     for (int i = 0; data[i]; i++)
-        con.execute("insert into zild_t (name, percent) values(?, ?);", data[i], i + 1 );   
+		con.execute("insert into zild_t (name, percent) values(?, ?);", data[i], i + 1 );   
+		
     con.commit();
+```    
     
- 3. Prepared Statement
+-  Prepared Statement
+```cpp 
     char *images[]= {"Ceci n'est pas une pipe", "Mona Lisa",
             "Bryllup i Hardanger", "The Scream",
             "Vampyre", "Balcony", "Cycle", "Day & Night", 
@@ -71,8 +77,10 @@
         pre.setInt(2, i + 1);
         pre.execute();
     }
+```    
     
- 4. exception handling
+- exception handling
+```cpp 
     try
     {
         con = pool.getConnection();
@@ -82,7 +90,7 @@
     {
         printf(e.what());
     }
-    
- for more document, please visit: http://www.tildeslash.com/libzdb/#api
- 
- 
+```
+
+ for more document, please visit: 
+ http://www.tildeslash.com/libzdb/#api
