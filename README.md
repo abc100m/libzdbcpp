@@ -5,9 +5,9 @@
  Libzdb is a database library with thread-safe connection pooling. The
  library can connect transparently to multiple database systems. It has
  zero runtime configuration and connection is specified via a URL scheme.
- web site: 
-    http://www.tildeslash.com/libzdb/ 
-    https://bitbucket.org/tildeslash/libzdb
+ web site:     
+    http://www.tildeslash.com/libzdb/         
+    https://bitbucket.org/tildeslash/libzdb     
 
 
 ###Introduction libzdbcpp
@@ -96,5 +96,7 @@
 ```
 
 
- for more document, please visit: 
- http://www.tildeslash.com/libzdb/#api
+ for more document, please visit:     
+    http://www.tildeslash.com/libzdb/#api   
+    https://github.com/abc100m/libzdbcpp/blob/master/test_zdbcpp/test_zdbcpp.cpp    
+
