@@ -27,6 +27,7 @@
 -  fetch a query
 ```cpp
  ConnectionPool pool("mysql://192.168.11.100:3306/test?user=root&password=dba");
+ pool.start();
  Connection con = pool.getConnection();
  //we can set default prefetch to Connection
  //con.setDefaultRowPrefetch(100);
@@ -52,6 +53,7 @@
             "Zapp", "Joey Mousepad", "§Á¦²?", 0}; 
     
     ConnectionPool pool("mysql://192.168.11.100:3306/test?user=root&password=dba");
+    pool.start();
     Connection con = pool.getConnection();
     con.beginTransaction();
     /* Insert values into database and assume that auto increment of id works */
