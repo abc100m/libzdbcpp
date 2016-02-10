@@ -372,16 +372,20 @@ public:
 
     Connection(Connection&& r)
         :t_(r.t_)
+        ,rows_changed_(r.rows_changed_)
     {
         r.t_ = nullptr;
+        r.rows_changed_ = -1;
     }
 
     Connection& operator=(Connection&& r)
     {
         if (&r != this) {
             close();
-            t_   = r.t_;
-            r.t_ = nullptr;
+            t_              = r.t_;
+            rows_changed_   = r.rows_changed_;
+            r.t_            = nullptr;
+            r.rows_changed_ = -1;
         }
     }
 
@@ -390,6 +394,7 @@ protected:  // for ConnectionPool
 
     Connection(Connection_T C)
         :t_(C)
+        ,rows_changed_(-1)
     {}
 
     void setClosed() {
@@ -474,12 +479,12 @@ public:
 
     long long rowsChanged() {
         except_wrapper(
-            return rows_changed_ ? rows_changed_ : Connection_rowsChanged(t_);
+            return (-1 == rows_changed_) ? Connection_rowsChanged(t_) : rows_changed_;
         );
     }
 
     void execute(const char *sql) {
-        rows_changed_ = 0;
+        rows_changed_ = -1;
         except_wrapper(
             Connection_execute(t_, sql);
         );
