@@ -162,6 +162,8 @@ public:
         except_wrapper( return ResultSet_getString(t_, columnIndex) );
     }
 
+    //note: blob field is ok when use mysql backend, but not worked when use oracle backend.
+    //is it a bug of libzdb?
     const char *getStringByName(const char *columnName) {
         except_wrapper( return ResultSet_getStringByName(t_, columnName) );
     }
